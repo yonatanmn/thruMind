@@ -17,29 +17,13 @@ server.set('port', port);
 
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/thruMindDb');
+
+let uri = 'mongodb://yonatanmn:thruMindTest@ds056688.mongolab.com:56688/thru-mind-test';
+mongoose.connect(uri);
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function (callback) {
-  console.log('open');
-
-  var videoSchema = mongoose.Schema({
-    name: String,
-    url: String
-  });
-
-  var Video = mongoose.model('Video', videoSchema);
-
-  var firstVid = new Video({ name: 'walking on the street', url: 'www.vid1.com' });
-  //
-  //firstVid.save((err, firstVid) => {
-  //  if (err) return console.error(err);
-  //  //console.log(firstVid);
-  //});
-
-
-});
+db.once('open', function (callback) {});
 
 
 //
