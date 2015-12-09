@@ -6,7 +6,15 @@ import http from './../core/HttpClient';
 
 var AppStateStore = Reflux.createStore({
   mixins: [StateMixin.store],
-  listenables: Actions, //or any other way of listening...  
+  listenables: Actions,
+
+  init(){
+    console.log('asdww');
+    socket.on('tes111', function(newState) {
+      console.log(newState);
+      //this.setState(newState);
+    }.bind(this));
+  },
 
   getInitialState: function(){      //that's a must! 
     return{
