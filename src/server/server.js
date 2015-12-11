@@ -11,7 +11,10 @@ import Router from './../routes';
 import Html from './../components/Html';
 import assets from './assets.json';
 
-const app = global.server = express();
+const app = global.app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+
 const port = process.env.PORT || 5000;
 app.set('port', port);
 
@@ -33,17 +36,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.json());
 
+
+// This attaches the socket.io instance to the request object
+app.use(function(req, res, next) {
+  req.io = io; next();
+});
+
+
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
+
 app.use('/api/content', require('./../api/content'));
 app.use('/api/video', require('./../api/video'));
-//
-//server.get('/api/video', async (req, res, next) => {
-//  let video = require('./api/video');
-//  res.send(video);
-//  //console.log('server video')
-//});
 
 
 //
@@ -77,8 +82,6 @@ app.get('*', async (req, res, next) => {
 
 
 
-var server = require('http').Server(app);
-
 
 
 
@@ -90,15 +93,3 @@ server.listen(port, () => {
   console.log(`The server is running at http://localhost:${port}/`);
 });
 
-var io = require('socket.io')(server);
-
-io.on('connection', function(socket){
-  console.log('a user connected');
-  global.socket = socket;
-  //socket.emit('tes111', { hello: 'world' });
-  socket.on('tes1121', function (data) {
-    //console.log(data);
-  });
-
-});
-//http://stackoverflow.com/questions/15736806/sharing-variables-across-files-in-node-js-without-using-global-variables

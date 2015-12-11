@@ -18,10 +18,9 @@ const router = new Router();
 
 
 router.get('/', async (req, res, next) => {
-  global.socket.emit('tes111', { hello: 'world' });
+  req.io.sockets.emit('tes111', { hello: 'world' });
   try {
     console.log('get video');
-    console.log(global.socket);
     setTimeout(function () {
       res.status(200).send(content);
     },2000);
