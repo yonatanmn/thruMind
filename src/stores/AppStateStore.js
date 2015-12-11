@@ -1,8 +1,11 @@
-var Reflux = require('reflux');
-var StateMixin = require('reflux-state-mixin');
-var Actions = require('../actions/VideoActions');
+import Reflux from 'reflux';
+import StateMixin from 'reflux-state-mixin';
+import Actions from '../actions/VideoActions';
 import http from './../core/HttpClient';
-
+//import socket from 'socket.io';
+import io from 'socket.io-client';
+//var socket = io();
+var socket = io.connect('http://localhost:5000');
 
 var AppStateStore = Reflux.createStore({
   mixins: [StateMixin.store],
@@ -11,6 +14,7 @@ var AppStateStore = Reflux.createStore({
   init(){
     console.log('asdww');
     socket.on('tes111', function(newState) {
+      console.log('tes111 from store');
       console.log(newState);
       //this.setState(newState);
     }.bind(this));
@@ -36,7 +40,8 @@ var AppStateStore = Reflux.createStore({
   },
 
   async onGetAllVideos() {
-    const res = await http.get(`/api/video/all`);
+    //const res = await http.get(`/api/video/all`);
+    const res = await http.get(`/test`);
     console.log(res);
     //this.setState({videoSrc: res.src});
   },

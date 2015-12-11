@@ -11,9 +11,9 @@ import Router from './../routes';
 import Html from './../components/Html';
 import assets from './assets.json';
 
-const server = global.server = express();
+const app = global.server = express();
 const port = process.env.PORT || 5000;
-server.set('port', port);
+app.set('port', port);
 
 
 var mongoose = require('mongoose');
@@ -29,15 +29,15 @@ db.once('open', function (callback) {});
 //
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
-server.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
-server.use(bodyParser.json());
+app.use(bodyParser.json());
 
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
-server.use('/api/content', require('./../api/content'));
-server.use('/api/video', require('./../api/video'));
+app.use('/api/content', require('./../api/content'));
+app.use('/api/video', require('./../api/video'));
 //
 //server.get('/api/video', async (req, res, next) => {
 //  let video = require('./api/video');
@@ -51,7 +51,7 @@ server.use('/api/video', require('./../api/video'));
 // -----------------------------------------------------------------------------
 
 
-server.get('*', async (req, res, next) => {
+app.get('*', async (req, res, next) => {
   try {
     let statusCode = 200;
     const data = { title: '', description: '', css: '', body: '', entry: assets.app.js };
@@ -75,6 +75,13 @@ server.get('*', async (req, res, next) => {
   }
 });
 
+
+
+var server = require('http').Server(app);
+
+
+
+
 //
 // Launch the server
 // -----------------------------------------------------------------------------
@@ -82,3 +89,16 @@ server.listen(port, () => {
   /* eslint-disable no-console */
   console.log(`The server is running at http://localhost:${port}/`);
 });
+
+var io = require('socket.io')(server);
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+  global.socket = socket;
+  //socket.emit('tes111', { hello: 'world' });
+  socket.on('tes1121', function (data) {
+    //console.log(data);
+  });
+
+});
+//http://stackoverflow.com/questions/15736806/sharing-variables-across-files-in-node-js-without-using-global-variables
