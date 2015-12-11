@@ -18,7 +18,7 @@ const router = new Router();
 
 
 router.get('/', async (req, res, next) => {
-  req.io.sockets.emit('tes111', { hello: 'world' });
+  //req.io.sockets.emit('tes111', { hello: 'world' });
   try {
     console.log('get video');
     setTimeout(function () {
@@ -33,7 +33,7 @@ router.get('/', async (req, res, next) => {
 
 import {all as getAllVideos, add as addVideo} from '../server/controllers/video';
 
-router.get('/all', getAllVideos);
+router.post('/all', getAllVideos);
 
 router.post('/', async (req, res)=>{
   console.log(req.body);

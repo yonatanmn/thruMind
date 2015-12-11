@@ -1,13 +1,29 @@
 var Video = require('../models/video');
 
-export function all(req, res) {
+
+function getAllVideos(cb){
   Video.find({}).exec(function(err, videos) {
     if(!err) {
-      res.json(videos);
+      cb(videos);
     }else {
       console.log('Error in first query');
     }
   });
+}
+
+function emitAllVideos(req){
+  getAllVideos(function (videos) {
+    req.io.sockets.emit('videos', videos);
+  });
+}
+
+export function all(req, res) {
+  //getAllVideos(res.json);
+
+  emitAllVideos(req);
+
+  res.status(200).send();
+
 }
 
 export function add(req, res) {
@@ -16,6 +32,9 @@ export function add(req, res) {
       console.log(err);
       res.status(400).send(err);
     }
+    emitAllVideos(req);
+
+
     res.status(200).send('Added successfully');
   });
 }

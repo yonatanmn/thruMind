@@ -8,17 +8,18 @@ var AppStateStore = Reflux.createStore({
   listenables: Actions,
 
   init(){
+    http.post(`/api/video/all`);
     const socket = http.connectSocket;
-    socket.on('tes111', function(newState) {
-      console.log('tes111 from store');
-      console.log(newState);
-      //this.setState(newState);
+    socket.on('videos', function(videos) {
+      //console.log('videos from store', videos);
+      this.setState({videos});
     }.bind(this));
 
   },
 
-  getInitialState: function(){      //that's a must! 
+  getInitialState: function(){      //that's a must!
     return{
+      videos: [{a:222}],
       videoSrc:'',
       dogs:3,
       name:'',
@@ -36,10 +37,10 @@ var AppStateStore = Reflux.createStore({
     this.setState({videoSrc: res.src});
   },
 
-  async onGetAllVideos() {
+  /*async onGetAllVideos() {
     const res = await http.get(`/api/video/all`);
     console.log(res);
-  },
+  },*/
 
   onInputName(name){
     this.setState({name: name})
