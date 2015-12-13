@@ -19,6 +19,24 @@ let socket = io.connect(`http://localhost:5000`);
 const HttpClient = {
   connectSocket: socket,
 
+  graph: (path, data) => new Promise((resolve, reject) => {
+    request
+      .post(getUrl(path))
+      .type('application/graphql')
+      .send(data)
+      .end((err, res) => {
+        if (err) {
+          if (err.status === 404) {
+            resolve(null);
+          } else {
+            reject(err);
+          }
+        } else {
+          resolve(res.body);
+        }
+      });
+  }),
+
   get: path => new Promise((resolve, reject) => {
     request
       .get(getUrl(path))

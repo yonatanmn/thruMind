@@ -42,6 +42,16 @@ app.use(function(req, res, next) {
   req.io = io; next();
 });
 
+import { graphql } from 'graphql';
+import schema from './graphql-schemas/video';
+
+app.use(bodyParser.text({ type: 'application/graphql' }));
+
+app.post('/data', async (req, res) => {
+  let result = await graphql(schema, req.body);
+  res.status(200).send(result);
+});
+
 
 //
 // Register API middleware

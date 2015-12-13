@@ -50,10 +50,32 @@ var AppStateStore = Reflux.createStore({
     this.setState({url: url})
   },
 
-  onSaveVid(){
-    let {name, url} = this.state;
+  async onSaveVid(){
+    //let {name, url} = this.state;
 
-    http.post(`/api/video`, {name, url});
+    //http.post(`/api/video`, {name, url});
+    let graphQuery = `
+       {
+       videos {
+          name
+          }
+       }
+       `;
+
+    let graphQuery2 = `
+       {
+       video(name: "qwe222") {
+          name,
+          url
+        }
+       }
+       `;
+
+
+    let res = await http.graph('/data', graphQuery);
+    console.log(res.data);
+
+
   }
 
 });
